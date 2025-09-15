@@ -1,0 +1,30 @@
+[
+    {
+        "src": "unknown",
+        "qname": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.evil.com",
+        "length": 69,
+        "is_txt": false,
+        "reasons": [
+            "Long domain (>50 chars)",
+            "Base64-like domain"
+        ]
+    },
+    {
+        "src": "unknown",
+        "qname": "QWxhZGRpbjpvcGVuIHNlc2FtZQ==.evil.com",
+        "length": 37,
+        "is_txt": false,
+        "reasons": [
+            "Base64-like domain"
+        ]
+    },
+    {
+        "src": "unknown",
+        "qname": "exfil.evil.com",
+        "length": 14,
+        "is_txt": true,
+        "reasons": [
+            "TXT record (possible data exfil)"
+        ]
+    }
+]

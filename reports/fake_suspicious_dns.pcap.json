@@ -15,7 +15,8 @@
         "length": 37,
         "is_txt": false,
         "reasons": [
-            "Base64-like domain"
+            "Base64-like domain",
+            "High entropy domain (entropy=4.59)"
         ]
     },
     {

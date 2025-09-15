@@ -1,5 +1,6 @@
 import re
 import math
+from collections import Counter
 
 def detect_suspicious(queries):
     findings = []
@@ -36,3 +37,21 @@ def shannon_entropy(s: str) -> float:
         return 0
     probabilities = [float(s.count(c)) / len(s) for c in set(s)]
     return -sum(p * math.log2(p) for p in probabilities)
+
+
+def detect_frequency(queries, threshold=50):
+    """
+    Detect hosts with unusually high DNS query frequency.
+    Default threshold = 50 queries in the capture.
+    """
+    src_counter = Counter(q["src"] for q in queries if q["src"] != "unknown")
+    findings = []
+
+    for src, count in src_counter.items():
+        if count > threshold:
+            findings.append({
+                "src": src,
+                "count": count,
+                "reason": f"High query volume ({count} queries > {threshold})"
+            })
+    return findings
